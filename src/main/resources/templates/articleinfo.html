@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Restaurant Review</title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+    <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">Restaurant Reviews</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+        <div class="container" th:if="${#request?.userPrincipal?.name}">
+            <div class="container" th:if="${#request.userPrincipal.name.equalsIgnoreCase('admin')}">
+                <a class="navbar-brand" href="/admin/">Panel</a>
+                <a class="navbar-brand" th:text ="${#request.getUserPrincipal().getName()}" href="/logout">Logout</a>
+            </div>
+            <div class="container" th:unless="${#request.userPrincipal.name.equalsIgnoreCase('admin')}">
+                <a class="navbar-brand" th:text ="${#request.getUserPrincipal().getName()}" href="/logout">Logout</a>
+            </div>
+        </div>
+        <div class="container" th:unless="${#request?.userPrincipal?.name}">
+            <a class="navbar-brand" href="/login">Login</a>
+        </div>
+    </ul>
+</nav>
+    <div class="row">
+        <div class="mx-auto"  style="width: 1000px;">
+                    <!---Blog post--->
+                    <div class="card mb-2">
+                        <a href="#!"><img class="card-img-top" th:src="${articles.url}" alt="..." /></a>
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${articles.articleName}"></h5>
+                            <p class="card-text" th:text="${articles.articleDescription}"></p>
+                            <div class="card-footer ml-auto line">
+                             <label>Rating:</label>
+                                <label th:text="${articles.avg}"></label>
+                            </div>
+                        </div>
+                    </div>
+                        <!---If review,show--->
+                        <div class="card w-75" style="width: 40rem;" th:each="review:${rating}">
+                            <div class="card-body" th:if="${review?.id}">
+                                <h5 class="card-title" th:text ="${review.user.username}"></h5>
+                                <p class="card-text" th:text="${review.comment}"></p>
+                                <div class="card-footer ml-auto line" th:if="${review?.stars}">
+                                    <label>Rated:</label>
+                                    <label th:text="${review.stars}"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <!---Comment and rate form if logged in--->
+                        <div class="card w-75 border-0" style="width: 40rem;">
+                            <form method="post" th:action="@{/articleinfosaved}" th:object="${addrating}" th:if="${#request.userPrincipal}">
+                                <div class="form-group form-inline" th:unless="*{stars == '0'}">
+                                    <label for="stars">Rate now </label>
+                                    <input value="0" min="1" max="10" type="number" class="form-control" id="stars"
+                                           autocomplete="off" th:field="*{stars}"/>
+                                </div>
+                                <div class="form-group ">
+                                    <input type="text" class="form-control" id="comment" placeholder="Comment here" th:field="*{comment}">
+                                    <input type="hidden" th:object="${articles}" th:field="*{id}" name="id">
+                                    <input type="submit" value="Submit" class="btn btn-primary"/>
+                                </div>
+                            </form>
+                        </div>
+        </div>
+    </div>
+
+<footer class="py-5 bg-dark">
+    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2021</p></div>
+</footer>
+
+<script src="js/scripts.js"></script>
+
+</body>
+</html>

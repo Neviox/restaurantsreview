@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Restaurant Review</title>
+
+    <link rel="icon" type="image/x-icon" href="@{/assets/favicon.ico}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">Restaurant Reviews</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+        <div class="container" th:if="${#request?.userPrincipal?.name}">
+            <div class="container" th:if="${#request.userPrincipal.name.equalsIgnoreCase('admin')}">
+                <a class="navbar-brand" href="/admin/">Panel</a>
+                <a class="navbar-brand" th:text ="${#request.getUserPrincipal().getName()}" href="/logout">Logout</a>
+            </div>
+            <div class="container" th:unless="${#request.userPrincipal.name.equalsIgnoreCase('admin')}">
+                <a class="navbar-brand" th:text ="${#request.getUserPrincipal().getName()}" href="/logout">Logout</a>
+            </div>
+        </div>
+        <div class="container" th:unless="${#request?.userPrincipal?.name}">
+            <a class="navbar-brand" href="/login">Login</a>
+        </div>
+    </ul>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10 mt-5 mb-5">
+            <p>
+                Admin panel
+            </p>
+            <p>
+                <a href="/admin/users" class="btn btn-large btn-success">Users List</a>
+            </p>
+            <p>
+                <a href="/admin/articles" class="btn btn-large btn-success">Articles List</a>
+            </p>
+            <p>
+                <a href="/admin/history"  class="btn btn-large btn-success">Review History</a>
+            </p>
+            <p>
+                <a href="/registerarticle"  class="btn btn-large btn-success">Create New Article</a>
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

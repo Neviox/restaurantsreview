@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Restaurant Review</title>
+
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+    <script type="text/javascript" th:src="@{/js/scripts.js}"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">Restaurant Reviews</a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+        <div class="container" th:if="${#request?.userPrincipal?.name}">
+            <div sec:authorize="hasAuthority('ADMIN')">
+                <a class="navbar-brand" href="/admin/">Panel</a>
+                <a class="navbar-brand" th:text ="${#request.getUserPrincipal().getName()}" href="/logout">Logout</a>
+            </div>
+            <div sec:authorize="hasAuthority('USER')">
+                <a class="navbar-brand" th:text ="${#request.getUserPrincipal().getName()}" href="/logout">Logout</a>
+            </div>
+        </div>
+        <div class="container" th:unless="${#request?.userPrincipal?.name}">
+            <a class="navbar-brand" href="/login">Login</a>
+        </div>
+    </ul>
+</nav>
+<header class=" bg-black img-fluid border-bottom mb-4">
+    <div class="container">
+        <div class="text-center bg-black" >
+            <h1>
+            <img src="https://thumbs.dreamstime.com/b/risotto-rice-meat-grilled-vegetables-healthy-diet-food-lunch-boxing-risotto-rice-meat-grilled-vegetables-healthy-100054883.jpg" alt="food" class="img-fluid img-thumbnail" style="width: fit-content">
+            </h1>
+        </div>
+    </div>
+</header>
+<div class="container">
+    <div class="row">
+        <div class="mx-auto"  style="width: 1000px;">
+            <div class="card mb-4">
+                <div class="card-header">Search</div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <form th:action="@{/search}" method="get">
+                            <input type="text" name="keyword" th:value="${keyword}"  placeholder="Find restaurant by name"  size="80" >
+                            <button type="submit" class="btn btn-info" >Search</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <tr th:each="post : ${posts.page}">
+                <div class="row">
+                        <!-- Blog post-->
+                        <div class="card mb-2" style="width: 40rem;">
+                            <a href="#!"><img class="card-img-top" th:src="${post.url}" alt="..." /></a>
+                            <div class="card-body">
+                                <h2 class="card-title h4" th:text="${post.articleName}"></h2>
+                                <p class="card-text" th:text="${post.articleDescription}"></p>
+                                <div class="input-group">
+                                    <form th:action="@{/article/{id}(id=${post.id})}" method="get">
+                                        <button type="More info" class="btn btn-primary" >More info</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </tr>
+
+            <nav aria-label="Page navigation" class="paging">
+                <ul class="pagination" th:if="${posts.page.totalPages > 1}">
+                    <li class="page-item" th:classappend="${!posts.paging.isPrevEnabled()? 'disabled' : ''}">
+                        <a class="page-link" th:href="@{'/?pageNumber=' + ${posts.paging.pageNumber - 1}}"
+                           tabindex="-1">Previous</a>
+                    </li>
+                    <th:block th:each="item : ${posts.paging.getItems()}">
+                        <li class="page-item" th:classappend="${item.index == posts.paging.pageNumber? 'active' : ''}"
+                            th:if="${item.pageItemType.name() == 'PAGE'}">
+                            <a class="page-link" th:href="@{'/?pageNumber=' + ${item.index}}"
+                               th:text="${item.index}"></a>
+                        </li>
+                        <li class="page-item disabled" th:if="${item.pageItemType.name() == 'DOTS'}">
+                            <a class="page-link" href="#">...</a>
+                        </li>
+                    </th:block>
+                    <li class="page-item" th:classappend="${!posts.paging.isNextEnabled()? 'disabled' : ''}">
+                        <a class="page-link" th:href="@{'/?pageNumber=' + ${posts.paging.pageNumber + 1}}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+
+
+<footer class="py-5 bg-dark">
+    <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2021</p></div>
+</footer>
+
+<script src="js/scripts.js"></script>
+
+</body>
+</html>

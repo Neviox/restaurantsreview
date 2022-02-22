@@ -1,0 +1,63 @@
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Admin</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+</head>
+
+<body>
+
+<div class="container my-2">
+    <h1>Users</h1>
+
+    <a href="/admin/" class="btn btn-primary btn-sm mb-3">Back to panel</a>
+
+    <table border="1" class="table table-striped table-responsive-md">
+        <thead>
+        <tr>
+            <th>User Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Username</th>
+            <th>E-mail</th>
+            <th>Role</th>
+            <th>Enabled</th>
+            <th>Locked</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.userFirstName}"></td>
+            <td th:text="${user.userLastName}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.userEmail}"></td>
+            <td th:text="${user.userRole}"></td>
+            <td th:text="${user.enabled}"></td>
+            <td th:text="${user.locked}"></td>
+            <td>
+                <a th:href="@{/lock/{id}(id=${user.id})}" methods="ADMIN" class="btn btn-primary btn-sm">LOCK</a>
+                <a th:href="@{/unlock/{id}(id=${user.id})}" methods="ADMIN" class="btn btn-primary btn-sm">UNLOCK</a>
+                <a th:href="@{/enable/{id}(id=${user.id})}" methods="ADMIN" class="btn btn-primary btn-sm">ENABLE</a>
+                <a th:href="@{/setadmin/{id}(id=${user.id})}" methods="ADMIN" class="btn btn-danger btn-sm">SET AS ADMIN</a>
+                <a th:href="@{/setuser/{id}(id=${user.id})}" methods="ADMIN" class="btn btn-danger btn-sm">SET AS USER</a>
+                <a th:href="@{/delete/{id}(id=${user.id})}" methods="ADMIN" class="btn btn-danger btn-sm">DELETE</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>
+</div>
+</div>
+</body>
+
+</html>
